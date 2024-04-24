@@ -1,4 +1,5 @@
-# E-commerce-Project
+
+# E-commerce-Project 
 The principal aim of the project is to create an E-commerce website focusing the attention on the server-side of the web application.
 
 # Server-Side 
@@ -8,3 +9,6 @@ Another important framework that we want to use is Flask that allows to the clie
 # Client-Side
 We want to create a dummy website to test the features of the back-end.
 
+# credits 
+   @gabibbo03
+   @dadezz
