@@ -1,0 +1,137 @@
+<!-- Pagina incriminata, sbagliata. i filtri sono applicabili tramite request sull'url flask -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header img {
+            max-height: 50px;
+        }
+        .full-width-image {
+            width: 100%;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        .sidebar {
+            width: 20%;
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .main-content {
+            width: 75%;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        /* Media query for smaller screens */
+        @media only screen and (max-width: 768px) {
+            .container {
+                flex-direction: column-reverse;
+                align-items: stretch;
+            }
+            .sidebar {
+                display: none;
+            }
+            .show-sidebar-button {
+                display: block;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="ecommerce-logo.png" alt="E-commerce Logo">
+        <nav>
+            <a href="#">Login / Profile</a>
+        </nav>
+    </header>
+
+    <img class="full-width-image" src="full-width-image.jpg" alt="Full Width Image">
+
+    <div class="container">
+        <div class="sidebar">
+            <!-- Filters and other sidebar content here -->
+            <h2>Filters</h2>
+            <select id="filter1">
+                <option value="option1">Option 1</option>
+                <option value="option2">Option 2</option>
+                <!-- Add more options as needed -->
+            </select>
+            <select id="filter2">
+                <option value="option1">Option 1</option>
+                <option value="option2">Option 2</option>
+                <!-- Add more options as needed -->
+            </select>
+            <button onclick="applyFilters()">Apply Filters</button>
+        </div>
+        <div class="main-content">
+            <!-- Product list content here -->
+            <h1>Product List</h1>
+            <ul>
+                <li class="product">
+                    <!-- Product details here -->
+                    <!-- Example product details -->
+                    <div class="product-image">
+                        <img src="product1.jpg" alt="Product 1">
+                    </div>
+                    <div class="product-details">
+                        <div class="product-title"><a href="#">Product 1</a></div>
+                        <div class="product-description">Description of Product 1.</div>
+                        <div class="product-price">$19.99</div>
+                    </div>
+                </li>
+                <!-- Add more product items as needed -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- Button to show sidebar for smaller screens -->
+    <button class="show-sidebar-button" onclick="showSidebar()">Show Filters</button>
+
+    <footer>
+        <!-- Legal information and links here -->
+        <p>&copy; 2024 Your E-commerce. All rights reserved.</p>
+        <p><a href="#">Terms of Service</a> | <a href="#">Privacy Policy</a></p>
+    </footer>
+
+    <script>
+        function applyFilters() {
+            // Get selected filter values and apply them
+            var filter1Value = document.getElementById('filter1').value;
+            var filter2Value = document.getElementById('filter2').value;
+            // Redirect to the product list page with applied filters
+            window.location.href = 'product-list.html?filter1=' + filter1Value + '&filter2=' + filter2Value;
+        }
+
+        function showSidebar() {
+            var sidebar = document.querySelector('.sidebar');
+            sidebar.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
