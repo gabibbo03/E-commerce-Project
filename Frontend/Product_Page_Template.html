@@ -75,7 +75,7 @@
         <h1>{{ product_name }}</h1>
         <div class="image-container">
             {% for img_src in img %}
-            <img src=img_src alt="Product Image">
+            <img src={{img_src}} alt="Product Image">
             {% endfor %}
         </div>
         <p> {{ product_description }} </p>
