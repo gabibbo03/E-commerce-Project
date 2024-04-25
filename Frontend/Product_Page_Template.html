@@ -23,6 +23,10 @@
         h1, h2 {
             color: #007bff;
         }
+        .product-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
         p {
             line-height: 1.6;
         }
@@ -47,40 +51,56 @@
         .details-table td {
             padding: 10px;
             border-bottom: 1px solid #ddd;
+            text-align: left;
         }
         .details-table th {
             text-align: left;
+        }
+        .image-container {
+            width: 100%;
+            overflow-x: auto; /* Enable horizontal scrolling */
+            white-space: nowrap; /* Prevent line breaks */
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            max-width: 100%;
+            max-height: 300px;
+            margin-right: 10px; /* Add space between images */
+            border-radius: 8px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Product Name</h1>
-        <p>Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget justo ullamcorper, aliquet velit id, fringilla nibh.</p>
-        <p>Price: $XX.XX</p>
+        <h1>{{ product_name }}</h1>
+        <div class="image-container">
+            {% for img_src in img %}
+            <img src=img_src alt="Product Image">
+            {% endfor %}
+        </div>
+        <p> {{ product_description }} </p>
+        <p><strong>Price: {{ product_price }}</strong></p>
         <a href="#" class="cta-button">Buy Now</a>
         
         <h2>Product Details</h2>
         <table class="details-table">
             <tr>
                 <th>Accepted Payment Methods:</th>
-                <td>Credit Card, PayPal</td>
+                <td> {{ product_payments }} </td>
             </tr>
             <tr>
                 <th>Shipping Available:</th>
-                <td>Yes</td>
+                <td> {{ product_shipping }}</td>
             </tr>
+            {% if place %}
             <tr>
-                <th>Place of Shipment:</th>
-                <td>United States</td>
+                <th>Where? </th>
+                <td>{{ product_place }}</td>
             </tr>
-            <tr>
-                <th>Estimated Delivery Date:</th>
-                <td>May 1, 2024</td>
-            </tr>
+            {% endif %}
             <tr>
                 <th>Available Quantity:</th>
-                <td>100</td>
+                <td>{{ product_qnt }}</td>
             </tr>
         </table>
     </div>
