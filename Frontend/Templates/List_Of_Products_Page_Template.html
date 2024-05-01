@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product List</title>
+    <link rel="stylesheet" href="../styles.css">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -60,6 +62,7 @@
     </style>
 </head>
 <body>
+    {% include '../header.html' %}
     <div class="container">
         <h1>Product List</h1>
         {% if products %}
@@ -70,7 +73,7 @@
                     <img src={{product.img_src}} alt="Product 1">
                 </div>
                 <div class="product-details">
-                    <div class="product-title"><a href="#">{{product.title}}</a></div>
+                    <div class="product-title"><a href="/{{product.id}}">{{product.title}}</a></div>
                     <div class="product-description">{{product.description}}</div>
                     <div class="product-price">${{product.price}}</div>
                 </div>
@@ -81,5 +84,6 @@
         <p>Sorry, there are no products matching the selected search filters</p>
     </div>
     {% endif %}
+    {% include '../footer.html' %}
 </body>
 </html>
