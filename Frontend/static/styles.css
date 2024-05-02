@@ -7,10 +7,12 @@ Header
 .panel {
     background-color: #007bff;
     color: #fff;
-    padding: 10px;
+    padding: 5px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 0 0 0 0;
+
 }
 .logo {
     color: #fff;
@@ -44,17 +46,21 @@ footer
 .footer {
     background-color: #007bff;
     color: #fff;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
+    padding: 16px;
+    display:flex;
+    justify-content: space-evenly; /* Mantenuto space-between */
     align-items: center;
     position: fixed;
     bottom: 0;
+    left: 0;
+    margin: 0;
     width: 100%;
+    text-align: left;
+    
 }
 .footer p,
 .footer a {
-    margin: 2;
+    margin: 2; /* Assicurati di specificare la misura del margine (es. margin: 2px;) */
 }
 .footer a {
     color: #fff;

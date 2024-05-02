@@ -17,4 +17,4 @@ def product_page():
         
         )
     """
-    return "@TODO: product_page"
+    return f'@TODO: product_page '
