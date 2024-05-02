@@ -11,27 +11,35 @@ Header
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0 0 0 0;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
 
+    border: none; /* Rimuove il bordo dalla banda */
 }
+
 .logo {
     color: #fff;
     text-decoration: none;
     font-weight: bold;
     font-size: 20px;
 }
+
 .search-bar {
     flex: 1;
     padding: 5px;
-    margin: 0 1px;
-    border: none;
+    margin: 0; /* Rimuove il margine */
+    border: none; /* Rimuove il bordo dalla barra di ricerca */
     border-radius: 5px;
+    background-color: #fff; /* Colore di sfondo bianco */
+    color: #007bff; /* Colore del testo blu */
 }
+
 .login-button {
     background-color: #fff;
     color: #007bff;
-    border: none;
-    padding: 5px 5px;
+    border: none; /* Rimuove il bordo dal pulsante di login */
+    padding: 5px 10px; /* Aggiunto padding per migliorare l'aspetto */
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;

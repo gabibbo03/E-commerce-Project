@@ -8,4 +8,4 @@ root_page_bp = Blueprint('root', __name__)
 @root_page_bp.route('/')
 def root ():
 
-    return """root page"""
+    return render_template('Home_Page.html')
