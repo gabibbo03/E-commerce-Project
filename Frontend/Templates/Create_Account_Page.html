@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    
+<html>
+    <head>
+       <title>Registrati!!!</title>
+       
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -45,23 +43,25 @@
             background-color: #0056b3;
         }
     </style> 
-</head>
-<body>
+    
+    </head>
+    <body>
+        <div class="container">
+        <form action="{{url_for('Sign_in.sign_in')}}" method="post">
+            <h1>Registrazione</h1>
 
-    <div class="container">
-        <h1>Login</h1>
-        <form action="{{ url_for('login.login_page') }}" method="post">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
+            
+            <label for="password">Inserisci la password:</label>
+            <input type="password" id="password" name="password1" required>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <label for="password">Conferma la Password:</label>
+            <input type="password" id="password" name="password2" required>
 
-            <input type="submit" value="Login">
+            <input type="submit" value="Registrati">
         </form>
-        <a href="{{ url_for('Sign_in.sign_in')}}">Non sei ancora iscritto? crea un account!!</a>
-
-        {% include '/footer.html' %}
     </div>
-</body>
+        {% include '/footer.html' %}
+    </body>
 </html>
