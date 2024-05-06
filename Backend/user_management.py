@@ -59,10 +59,9 @@ def sign_in():
     
     if request.method == 'POST':
         user = request.form['username']
-
         pwd1 = request.form['password1']
-
         pwd2 = request.form['password2']
+        
         
         print(user,pwd1,pwd2)
 
@@ -72,6 +71,10 @@ def sign_in():
 
 @dashboard_bp.route('/dashboard')
 def dashboard():
+    
+    '''
+     da user carico tutti dati presenti nel dbms , perchè è chiave primaria
+    '''
 
     if 'user' in session.keys():
         if session['user']:
