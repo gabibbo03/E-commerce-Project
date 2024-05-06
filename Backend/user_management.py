@@ -1,9 +1,6 @@
 from flask import Blueprint, render_template,redirect,url_for,request,session
 
-login_page_bp = Blueprint('login', __name__)
-logout_page_bp = Blueprint('logout',__name__)
-sign_in_page_bp = Blueprint('Sign_in' , __name__)
-dashboard_bp = Blueprint('dashboard',__name__)
+user_manager_bp = Blueprint('user_manager',__name__)
 
 
 '''
@@ -27,7 +24,7 @@ loggati.
 '''
 
 
-@login_page_bp.route('/login',methods=['GET','POST'])
+@user_manager_bp.route('/login',methods=['GET','POST'])
 def login_page():
      
     if request.method == 'POST':
@@ -41,11 +38,11 @@ def login_page():
         print(f' quello che ricevo da metodo post : {user} , {pwd}')
         print(session['user'])
 
-        return redirect(url_for('dashboard.dashboard'))
+        return redirect(url_for('user_manager.dashboard'))
     else:
         return render_template('Login_Page_Template.html')
 
-@logout_page_bp.route('/logout')
+@user_manager_bp.route('/logout')
 def logout():
     
     if 'user' in session.keys():
@@ -54,7 +51,7 @@ def logout():
         
     return redirect(url_for('root.root'))
 
-@sign_in_page_bp.route('/sign_in', methods= ['GET','POST'])
+@user_manager_bp.route('/sign_in', methods= ['GET','POST'])
 def sign_in():
     
     if request.method == 'POST':
@@ -69,7 +66,7 @@ def sign_in():
     else:
         return render_template('Create_Account_Page.html')
 
-@dashboard_bp.route('/dashboard')
+@user_manager_bp.route('/dashboard')
 def dashboard():
     
     '''

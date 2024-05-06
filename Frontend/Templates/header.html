@@ -61,7 +61,7 @@
         </div>
         <div class="w3-bar-item w3-right">
             {% if session['user'] %}
-            <a href="{{ url_for('dashboard.dashboard') }}" class="w3-button w3-round-large logout-button" style="height: 33px;">Ciao {{ session['user'] }}</p>
+            <a href="/dashboard" class="w3-button w3-round-large logout-button" style="height: 33px;">Ciao {{ session['user'] }}</p>
             
             <a href="/logout" class="w3-button w3-round-large logout-button">Logout</a>
             {% else %}

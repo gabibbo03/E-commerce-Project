@@ -50,7 +50,7 @@
 
     <div class="container">
         <h1>Login</h1>
-        <form action="{{ url_for('login.login_page') }}" method="post">
+        <form action="/login" method="post">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
 
@@ -59,7 +59,7 @@
 
             <input type="submit" value="Login">
         </form>
-        <a href="{{ url_for('Sign_in.sign_in')}}">Non sei ancora iscritto? crea un account!!</a>
+        <a href="/sign_in">Non sei ancora iscritto? crea un account!!</a>
 
         {% include '/footer.html' %}
     </div>
