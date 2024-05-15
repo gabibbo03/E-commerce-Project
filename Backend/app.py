@@ -3,6 +3,7 @@ from user_management import user_manager_bp
 from product_page import product_page_bp
 from search_page import search_page_bp
 from root import root_page_bp
+from sqlclass import *
 
 
 def create_app():

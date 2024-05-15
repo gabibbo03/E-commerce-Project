@@ -1,4 +1,6 @@
 from flask import Blueprint, render_template,redirect,url_for,request,session
+from sqlclass import Utenti,engine
+from sqlalchemy.orm import Session
 
 user_manager_bp = Blueprint('user_manager',__name__)
 
@@ -33,6 +35,9 @@ def login_page():
         pwd = request.form['password']
         
         session['user'] = user
+        s = Session(engine)
+        u = s.get(Utenti,user) # primary key : user
+
 
 
         print(f' quello che ricevo da metodo post : {user} , {pwd}')
@@ -61,6 +66,11 @@ def sign_in():
         
         
         print(user,pwd1,pwd2)
+        
+        if pwd1 == pwd2:
+            s = Session(engine)
+            s.add(Utenti(user= user,password = pwd1,contatto_mail="tosorea@gmail.com"))
+            s.commit()
 
         return render_template('Success_Sign_In.html')
     else:

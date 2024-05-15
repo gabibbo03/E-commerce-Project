@@ -3,7 +3,7 @@ from flask import Blueprint, render_template
 product_page_bp = Blueprint('product', __name__)
 
 @product_page_bp.route('/<product_id>')
-def product_page():
+def product_page(product_id):
     """
     item_id è la chiave primaria dell'articolo dentro al database
     articolo = get_article_from_db(item_id)
