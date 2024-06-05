@@ -99,14 +99,28 @@ def sign_in():
         pwd1 = request.form['password1']
         pwd2 = request.form['password2']
 
+        '''
+          per rendere più pulito il messaggio di errore : controllo
+          sia che lo user al momento dell'inserimento sia univoco
+          che anche la email.
+        '''
+
+
         print(user, pwd1, pwd2)
         with Session(engine) as s:
             stmt = select(Utente).where(and_(Utente.contatto_mail == email, Utente.user != user))
-            res = s.execute(stmt).all()
+            stmt2 = select(Utente).where(Utente.user == user)
+            emailres = s.execute(stmt).all()
+            useres = s.execute(stmt2).one()
 
-        if res:
-            flash("email già usata da un altro utente")
-            return redirect(url_for('user_manager.sign_in'))
+        if useres or emailres:
+            if useres:
+                flash("Nome utente già utilizzato da un altro utente")
+
+            if emailres:
+                flash("email già utilizzata")
+            return redirect(url_for("user_manager.sign_in"))
+
 
         if pwd1 == pwd2:
             hashed_pwd = hash_password(pwd1)
