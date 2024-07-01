@@ -1,0 +1,16 @@
+Commento : 
+     """
+    valori possibili che ricevo :
+        min 0
+        max maxDouble
+        data_min : 01/01/2024
+        data_max : current_date
+        usato : undefined,new,second_hand
+
+        Spiegazione :
+
+        nel primo caso uso la search bar per filtrare i prodotti.
+        nel secondo caso uso i filtri per ottenere i prodotti desiderati.
+        La parte più difficile è stata fare i filtri
+    """
+il valore undefined alla fine non l'ho utilizzato , ho solo controllato che il valori nullable come : nuovo e spedizione fossero effettivamente null.
