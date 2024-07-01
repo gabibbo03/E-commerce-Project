@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Landing Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #007bff;
+        }
+        .product-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        p {
+            line-height: 1.6;
+        }
+        .cta-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .cta-button:hover {
+            background-color: #0056b3;
+        }
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .details-table th,
+        .details-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        .details-table th {
+            text-align: left;
+        }
+        .image-container {
+            width: 100%;
+            overflow-x: auto; /* Enable horizontal scrolling */
+            white-space: nowrap; /* Prevent line breaks */
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            max-width: 100%;
+            max-height: 300px;
+            margin-right: 10px; /* Add space between images */
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    {% include '/header.html' %}
+    <div class="container">
+        {% if product %}
+        <h1>{{ product.Titolo }}</h1>
+        <div class="image-container">
+            {% for img_src in img %}
+            <img src="{{img_src}}" alt="Product Image">
+            {% endfor %}
+        </div>
+        <p> {{ product.Descrizione }} </p>
+        <p><strong>Price: {{ product.Prezzo }}</strong></p>
+        <a href="#" class="cta-button">Buy Now</a>
+        
+        <h2>Product Details</h2>
+        <table class="details-table">
+            <tr>
+                <th>Accepted Payment Methods:</th>
+                <td>
+                    {% if product.visa == true %}
+                        card
+                    {% endif %}
+                    {% if product.contanti == true %}
+                        cash
+                    {% endif %}
+                    {% if product.baratto == true %}
+                        barter
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Shipping Available:</th>
+                {% if product.spedizione %}
+                    <td>si</td>
+                 {% else %}
+                    <td>no</td>
+                {% endif %}
+            </tr>
+            {% if place %}
+            <tr>
+                <th>Where? </th>
+                <td>{{ product.Luogo }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <th>Available Quantity:</th>
+                <td>{{ product.disponibilita }}</td>
+            </tr>
+            <tr>
+                <th>Publication date</th>
+                <td>{{ product.data_pubblicazione }}</td>
+            </tr>
+            <tr>
+                <th>Condition</th>
+                {% if product.nuovo == true %}
+                <td>new</td>
+                {% else %}
+                <td>second hand</td>
+                {% endif %}
+            </tr>
+        </table>
+        {% else %}
+        <h1> Error 404</h1>
+        <h2> Product not found :(</h2>
+        {% endif %}
+    </div>
+</body>
+</html>
