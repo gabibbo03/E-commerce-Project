@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <title>Product Landing Page</title>
     <style>
         body {
@@ -38,6 +39,13 @@
             text-decoration: none;
             border-radius: 5px;
             transition: background-color 0.3s;
+        }
+        .qta {
+            display: inline-block;
+            padding: 10px 15px;
+            width: 200px;
+            text-decoration: none;
+            border-radius: 5px;
         }
         .cta-button:hover {
             background-color: #0056b3;
@@ -82,8 +90,16 @@
         </div>
         <p> {{ product.Descrizione }} </p>
         <p><strong>Price: {{ product.Prezzo }}</strong></p>
-        <a href="#" class="cta-button">Buy Now</a>
-        
+            <form method="GET" action="/added" style="display:inline;" enctype="multipart/form-data">
+                <input type="text" name="qta" class="w3-bar-item qta" placeholder="quantità">
+                <input type="hidden" name="id" value="{{ product.id_prodotto }}">
+                <button type="submit" class="cta-button">add to cart</button>
+            </form>
+
+        </br>
+        <a href="{{ url_for('product.review_upload', id=product.id_prodotto) }}">
+            Scrivi una recensione
+        </a>
         <h2>Product Details</h2>
         <table class="details-table">
             <tr>
@@ -131,6 +147,7 @@
                 {% endif %}
             </tr>
         </table>
+        <a href="/reviews/{{ product.id_prodotto }}">Vai alle Recensioni</a>
         {% else %}
         <h1> Error 404</h1>
         <h2> Product not found :(</h2>

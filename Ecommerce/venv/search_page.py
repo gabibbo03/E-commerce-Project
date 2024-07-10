@@ -17,11 +17,12 @@ search_page_bp = Blueprint('search', __name__)
 """
 
 def filters(prezzo_min,prezzo_max,data_min,data_max,condition,payment_methods,sped):
-
     filt = []
     max_date = datetime.now().date()
     if prezzo_min:
         if double(prezzo_min) >= DOUBLEMIN:
+            # print(Prodotti.Prezzo >= double(prezzo_min), " \n")
+            # print("tipo: ", type(Prodotti.Prezzo >= double(prezzo_min)))
             filt.append(Prodotti.Prezzo >= double(prezzo_min))
     if prezzo_max:
         if double(prezzo_max) <= DOUBLEMAX:
@@ -51,7 +52,7 @@ def filters(prezzo_min,prezzo_max,data_min,data_max,condition,payment_methods,sp
             filt.append(Prodotti.spedizione == False)
     return  filt
 
-@search_page_bp.route('/search',methods= ['GET','POST'])
+@search_page_bp.route('/search')
 def search_page():
 
     """
@@ -72,59 +73,49 @@ def search_page():
     if request.method == 'GET':
 
         _prodotti = []
-        img_src  = []
+        img_src = []
         query = request.args
 
         print(query) # V
         with Session(engine) as s:
-            if len(query) == 1 and "query" in query.keys():
-                prodotti = s.query(Prodotti).all()
-                for p in prodotti:
-                    if query["query"] in p.Descrizione or query["query"] in p.Titolo:
-                        _prodotti.append(p)
-                        folderpath = os.path.join(UPLOAD_FOLDER, str(p.autore), str(p.id_prodotto))
-                        if os.path.exists(folderpath) and os.path.isdir(folderpath):
-                            files = os.listdir(folderpath)
-                            filepath = os.path.join(folderpath, files[0])
 
-                            img_src.append(filepath)
-                            print(filepath)
-                        else:
-                            img_src.append(placeholder)
-                            print(placeholder)
-            else:
-                prezzo_min = request.args.get('prezzo_min')
-                prezzo_max = request.args.get('prezzo_max')
-                data_min = request.args.get('data_min')
-                data_max = request.args.get('data_max')
-                condition = request.args.get('condition')
-                payment_methods = request.args.getlist('payment_methods[]')
-                sped = request.args.get('Sped')
+            prezzo_min = request.args.get('prezzo_min')
+            prezzo_max = request.args.get('prezzo_max')
+            data_min = request.args.get('data_min')
+            data_max = request.args.get('data_max')
+            condition = request.args.get('condition')
+            payment_methods = request.args.getlist('payment_methods[]')
+            sped = request.args.get('Sped')
+            search = request.args.get('query')
 
-                ris = filters(prezzo_min,prezzo_max,data_min,data_max,condition,payment_methods,sped)
-                prodotti = s.query(Prodotti).where(and_(*ris)).all()
+            """
+            come fosse una lambda, sto mettendo in ris la lista con tutte le condizioni che devono essere soddisfatte.
+            nella query sottostante, le metto in "and" e applico questi filtri alla query.
+            Così facendo la query scritta è sempre una e cambiano dinamicamente i filtri
+            """
+            ris = filters(prezzo_min, prezzo_max, data_min, data_max, condition, payment_methods, sped)
+            prodotti = s.query(Prodotti).where(and_(*ris)).all()
 
-                for p in prodotti:
 
+            for p in prodotti:
+                if search in p.Descrizione or search in p.Titolo:
                     _prodotti.append(p)
                     folderpath = os.path.join(UPLOAD_FOLDER, str(p.autore), str(p.id_prodotto))
-                    print("folderpath = ", folderpath)
                     if os.path.exists(folderpath) and os.path.isdir(folderpath):
                         files = os.listdir(folderpath)
                         filepath = os.path.join(folderpath, files[0])
 
                         img_src.append(filepath)
                         print(filepath)
-
                     else:
                         img_src.append(placeholder)
                         print(placeholder)
 
-        return render_template("list_of_products_page_template.html",products=_prodotti, img_src=img_src, zip=zip)
         s.commit()
+        return render_template("list_of_products_page_template.html", products=_prodotti, img_src=img_src, zip=zip)
 
     return render_template("list_of_products_page_template.html")
 
 @search_page_bp.route("/filter")
 def filter_query():
-    return  render_template("Filters_Form_Template.html")
+    return render_template("Filters_Form_Template.html")

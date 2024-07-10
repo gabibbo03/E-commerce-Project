@@ -81,9 +81,37 @@
     {% include '/header.html' %}
 
     <div class="container">
-        <h2>Filters</h2>
+        <h2>La tua ricerca</h2>
         <form action="/search" method="get" enctype="multipart/form-data">
         <ul>
+            <li>
+                <b>La tua ricerca:</b>
+                    <input type="text" name="query" class="w3-bar-item" placeholder="Search">
+            </li>
+            <li>
+                <b>Categoria:</b>
+                <div class="checkbox-group">
+                    <select id="Tag" name="Tag">
+                        <option value="">Seleziona...</option>
+                        <option value="motori">Automobili e veicoli</option>
+                        <option value="motori2">Accessori auto</option>
+                        <option value="elettronica">Dispositivi elettronici</option>
+                        <option value="elettronica2">Accessori per l'elettronica</option>
+                        <option value="casa">Immobili</option>
+                        <option value="casa2">Arredamento</option>
+                        <option value="casa3">Elettrodomestici</option>
+                        <option value="casa4">Cura casa</option>
+                        <option value="persona">Vestiario</option>
+                        <option value="persona2">Accessori e gioielli</option>
+                        <option value="sport">Sports e Hobbies</option>
+                        <option value="libri">Libri</option>
+                        <option value="bici">Biciclette</option>
+                        <option value="collezionismo">Collezionismo</option>
+                        <option value="altro">Altro</option>
+                    </select>
+                </div>
+            </li>
+
             <li>
                 <b>Prezzo:</b>
                     <input type="text" name="prezzo_min" class="w3-bar-item" placeholder="prezzo min">

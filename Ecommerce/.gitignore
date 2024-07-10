@@ -1,0 +1,6 @@
+venv/include/
+venv/Lib/
+venv/Scripts
+
+*.iml
+.idea/

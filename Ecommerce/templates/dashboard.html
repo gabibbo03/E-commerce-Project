@@ -28,25 +28,22 @@
 <div class="container">
     <h1>Dashboard</h1>
     <div class="data-item"><strong>Email:</strong> {{ email }}</div>
-    > <a class="data-item" href="/">cambia email</a>
+    > <a class="data-item" href="/Change_Mail">cambia email</a>
     {% if telefono %}
         <div class="data-item"><strong>Telefono:</strong> {{ telefono }}</div>
-        > <a class="data-item" href="/">cambia numero di telefono</a>
+        > <a class="data-item" href="/Change_Phone">cambia numero di telefono</a>
     {% else %}
         <p class="data-item"><strong>Telefono : </strong> </p>
-        > <a class="data-item" href="/">inserisci il telefono</a>
+        > <a class="data-item" href="/Change_Phone">inserisci il telefono</a>
     {% endif %}
-    <div class="data-item"><strong>Media Recensioni:</strong> {{ media_recensioni }}</div>
-
-
 
     <div class="data-item">
         <div class="data-item"><strong>Carrello</strong></div>
-        > <a class="data-item" href="/">Vai al carrello</a>
+        > <a class="data-item" href="/carrello">Vai al carrello</a>
     </div>
     <div class="data-item">
         <div class="data-item"><strong>I miei annunci</strong></div>
-        > <a class="data-item" href="/">Vai agli annunci</a>
+        > <a class="data-item" href="/My_sales">Vai agli annunci</a>
     </div>
 
     <div class="data-item">

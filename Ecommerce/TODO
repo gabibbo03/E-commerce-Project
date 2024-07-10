@@ -1,0 +1,18 @@
+# manca carrello e storico.
+Dal carrello c'è bottone "buy now", il prodotto va in storico e va tolto dal carrello.
+ la disponibilità deve essere
+decrementata. (ipotetico trigger)
+
+# recensioni
+da mettere on delete cascade
+in generale tutte lol
+
+# triggers
+  - quantita da aggiungere al carrelle
+  - tabelle per join di transito , vogliamo aggiungere sottobanco le cose
+    e non da python.
+  - quantita da controllare al momento del pagamento
+    (Race Condition).
+
+# fare quella roba del cascade anche su tutte le altre tabelle!!!
+importante.

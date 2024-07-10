@@ -1,12 +1,12 @@
 import os
 from datetime import datetime
-
+import statistics
 from flask import Blueprint, render_template, flash, redirect, request, url_for
+from numpy import double
 from werkzeug.utils import secure_filename
 
-from sqlclass import engine, func
+from sqlclass import engine, func, Recensioni, ProdottiRecensioni
 from sqlalchemy.orm import Session
-from sqlalchemy.orm.exc import NoResultFound
 from sqlclass import Prodotti
 from flask_login import current_user, login_required
 from extention import *
@@ -16,9 +16,12 @@ product_page_bp = Blueprint('product', __name__)
 
 @product_page_bp.route('/<int:product_id>')
 def product_page(product_id):
-    with  Session(engine) as s:
+    with Session(engine) as s:
         p = s.get(Prodotti, product_id)
-    s.close()
+        print("riga 22 product page: ", p)
+        s.close()
+    if p is None:
+        return "Il prodotto non esiste"
     folderpath = os.path.join(UPLOAD_FOLDER, str(p.autore), str(p.id_prodotto))
     if os.path.exists(folderpath) and os.path.isdir(folderpath):
         files = os.listdir(folderpath)
@@ -42,25 +45,32 @@ def product_upload():
         # Hello from hell GNU + Richard Stallman + Linux + Anime Girl
         title = request.form['Titolo']
         content = request.form['Descrizione']
+        category = request.form['Tag']
         payment_methods = request.form.getlist('payment_methods')
-        price = request.form['prezzo']
+        price_ = request.form['prezzo']
         shipment = request.form['shipment']
         place = request.form.get('luogo')
-        quantity = request.form['quantita']
+        quantity_ = request.form['quantita']
         condition = request.form['condition']
+
+        try:
+            quantity = int(quantity_)
+            if quantity < 0:
+                raise ValueError
+        except:
+            return "quantità non valida"
+
+        try:
+            price = float(price_)
+            if price == 0:
+                raise ValueError
+        except:
+            return "prezzo non valido"
+
+
 
         images = request.files.getlist('images[]')
         image_paths = []
-
-        last_id = 0
-        with Session(engine) as s:
-            p = s.query(func.max(Prodotti.id_prodotto)).scalar()
-            s.close()
-
-            if p is None:
-                last_id = 0
-            else:
-                last_id = p
 
         for image in images:
             if image and allowed_file(image.filename):
@@ -86,12 +96,55 @@ def product_upload():
                                 disponibilita=quantity,
                                 data_pubblicazione=datetime.utcnow().date(),
                                 nuovo=condition == 'yes',
-                                autore=current_user.id
+                                autore=current_user.id,
+                                tag=category
                                 )
             s.add(new_prod)
             s.commit()
+            id  = new_prod.id_prodotto
 
 
-        return redirect(url_for('product.product_page', product_id=last_id + 1))
+        return redirect(url_for('product.product_page', product_id=id))
     else:
         return render_template('Upload_Form_Template.html')
+
+@product_page_bp.route("/write_review/<int:id>", methods=['GET', 'POST'])
+def review_upload(id):
+    if request.method == 'POST':
+        title = request.form['Titolo']
+        content = request.form['Descrizione']
+        stelline = request.form['star']
+
+        with Session(engine) as s:
+            # Aggiungi la nuova recensione e committala
+            new_rec = Recensioni(titolo=title, descrizione=content, numero_stelle=stelline)
+            s.add(new_rec)
+            s.commit()
+
+            # Recupera l'ID della nuova recensione
+            new_rec_id = new_rec.id_recensione_entry
+
+            # Aggiungi la relazione nella tabella ProdottiRecensioni
+            s.add(ProdottiRecensioni(id_recensione_entry=new_rec_id, id_prodotto=id))
+            s.commit()
+
+        return redirect(url_for('product.product_page', product_id=id))
+    else:
+        return render_template('Write_review.html', product_id=id)
+
+@product_page_bp.route("/reviews/<int:id>")
+def reviews(id):
+
+    with (Session(engine) as s):
+
+        pr = aliased(ProdottiRecensioni)
+        r = aliased(Recensioni)
+        ris = s.query(r).join(pr, r.id_recensione_entry == pr.id_recensione_entry).filter(pr.id_prodotto == id).all()
+
+        media = s.query(func.avg(r.numero_stelle)).join(pr, r.id_recensione_entry == pr.id_recensione_entry).filter(pr.id_prodotto == id).scalar()
+        if media is None:
+            media = 0
+        else:
+            media = round(media, 1)
+
+    return render_template('Reviews_template.html', ris=ris, media=media)
