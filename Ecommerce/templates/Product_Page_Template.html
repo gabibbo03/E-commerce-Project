@@ -40,6 +40,15 @@
             border-radius: 5px;
             transition: background-color 0.3s;
         }
+        .remove-button {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
         .qta {
             display: inline-block;
             padding: 10px 15px;
@@ -148,6 +157,13 @@
             </tr>
         </table>
         <a href="/reviews/{{ product.id_prodotto }}">Vai alle Recensioni</a>
+        <div>
+            Questo prodotto è tuo?
+            <form method="GET" action="/ArticoloRimosso" style="display:inline;" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="{{ product.id_prodotto }}">
+                <button type="submit" class="remove-button">Rimuovi Annuncio</button>
+            </form>
+        </div>
         {% else %}
         <h1> Error 404</h1>
         <h2> Product not found :(</h2>

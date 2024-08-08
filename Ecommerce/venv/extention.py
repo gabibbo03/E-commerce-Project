@@ -3,9 +3,9 @@ from flask_login import LoginManager
 import os
 import shutil
 from numpy import finfo,float64
-from dateutil import parser
 from datetime import  datetime
 from sqlalchemy.orm import aliased
+
 """
    extention.py serve solo a collegare login_manager di 
    app.py in cui viene inizializzato ogni volta che viene tirato su il server
@@ -69,3 +69,15 @@ def delete_images_dir(path_cartella):
     else:
         print(f"Il percorso {path_cartella} non esiste.")
 
+def get_images_for_products(_prodotti, p, img_src) -> None:
+    _prodotti.append(p)
+    folderpath = os.path.join(UPLOAD_FOLDER, str(p.autore), str(p.id_prodotto))
+    if os.path.exists(folderpath) and os.path.isdir(folderpath):
+        files = os.listdir(folderpath)
+        filepath = os.path.join(folderpath, files[0])
+
+        img_src.append(filepath)
+        print(filepath)
+    else:
+        img_src.append(placeholder)
+        print(placeholder)

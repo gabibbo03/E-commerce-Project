@@ -55,8 +55,18 @@
             font-size: 24px;
             margin-bottom: 10px;
         }
-        .product-star {
+        .product-link {
             font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #0056b3;
+        }
+        .product-unavaiable {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .product-star {
             font-size: 18px;
             margin-bottom: 10px;
         }
@@ -85,10 +95,10 @@
                         <div class="product-title">{{st.Nome}}</div>
                         <div class="product-star">Comprato il : {{ st.Data }}</div>
                         {% if ps.id_prodotto %}
-                            <div class="product-title"><a href="/{{product.id_prodotto}}">guarda il prodotto.</a></div>
-                        {{% else %}}
-                            <div class="product-title">Prodotto non più disponibile :(</div>
-                        {{% endif %}}
+                            <div class="product-link"><a href="/{{ps.id_prodotto}}">guarda il prodotto.</a></div>
+                        {% else %}
+                            <div class="product-unavaiable">Prodotto non più disponibile :(</div>
+                        {% endif %}
                     </div>
                 </li>
             {% endfor %}

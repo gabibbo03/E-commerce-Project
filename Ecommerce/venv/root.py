@@ -1,8 +1,7 @@
 from extention import *
-from flask import Flask, render_template, request, Blueprint,session
+from flask import render_template,Blueprint
 from sqlalchemy.orm import Session
 from sqlclass import *
-
 
 # pagina della lista prodotti
 
@@ -17,18 +16,7 @@ def root ():
     _prodotti = []
     img_src = []
     for p in prodotti:
-
-        _prodotti.append(p)
-        folderpath = os.path.join(UPLOAD_FOLDER, str(p.autore), str(p.id_prodotto))
-        if os.path.exists(folderpath) and os.path.isdir(folderpath):
-            files = os.listdir(folderpath)
-            filepath = os.path.join(folderpath, files[0])
-
-            img_src.append(filepath)
-            print(filepath)
-        else:
-            img_src.append(placeholder)
-            print(placeholder)
+        get_images_for_products(_prodotti, p, img_src)
 
     s.commit()
 

@@ -1,4 +1,4 @@
-from sqlalchemy import URL,create_engine,select,and_,desc,func
+from sqlalchemy import URL,create_engine,func,and_,select
 from sqlalchemy.ext.automap import automap_base
 
 # Usa l'engine che hai già creato
@@ -27,7 +27,5 @@ CarrelloUtenti = Base.classes['CarrelloUtenti']
 ProdottiStorici = Base.classes['ProdottiStorici']
 Storico = Base.classes['Storico']
 print(Storico.__table__.columns.keys())
-Utenti = Base.classes['Utenti']
-Utenti = Base.classes['Utenti']
-Utenti = Base.classes['Utenti']
+
 

@@ -3,9 +3,7 @@ from numpy import double
 
 from sqlclass import  engine, and_, Prodotti
 from sqlalchemy.orm import Session
-from sqlalchemy.orm.exc import NoResultFound
 from extention import *
-
 
 search_page_bp = Blueprint('search', __name__)
 
@@ -99,17 +97,7 @@ def search_page():
 
             for p in prodotti:
                 if search in p.Descrizione or search in p.Titolo:
-                    _prodotti.append(p)
-                    folderpath = os.path.join(UPLOAD_FOLDER, str(p.autore), str(p.id_prodotto))
-                    if os.path.exists(folderpath) and os.path.isdir(folderpath):
-                        files = os.listdir(folderpath)
-                        filepath = os.path.join(folderpath, files[0])
-
-                        img_src.append(filepath)
-                        print(filepath)
-                    else:
-                        img_src.append(placeholder)
-                        print(placeholder)
+                    get_images_for_products(_prodotti, p, img_src)
 
         s.commit()
         return render_template("list_of_products_page_template.html", products=_prodotti, img_src=img_src, zip=zip)

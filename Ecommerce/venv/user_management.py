@@ -1,18 +1,14 @@
-import hashlib
-import os
-import statistics
+from sqlclass import Utente, engine, select,Prodotti, Carrello, ProdottiCarrelli, CarrelloUtenti, ProdottiStorici,Storico
+from extention import *
 
 from flask import flash
 from flask import Blueprint, render_template, redirect, url_for, request
+from flask_login import UserMixin,login_user,logout_user,current_user,login_required
+
 from hashlib import sha256
 
 from sqlalchemy import update
 from sqlalchemy.exc import SQLAlchemyError
-
-from extention import *
-from flask_login import UserMixin,login_user,logout_user,current_user,login_required
-from sqlclass import Utente, engine, select, and_, Prodotti, Carrello, ProdottiCarrelli, CarrelloUtenti, \
-    ProdottiRecensioni, Recensioni, Utenti, ProdottiStorici,Storico
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -45,7 +41,6 @@ class User(UserMixin):
         self.id = id
         self.password = password
 
-
 @login_manager.user_loader
 def user_loader(user_id):
 
@@ -54,12 +49,10 @@ def user_loader(user_id):
         print("metodo load_user : " + u.user)
     return User(id=u.user, password=u.password)
 
-
 def hash_password(password):
     salt = os.urandom(16)  # Genera un sale casuale di 16 byte
     pwd_hash = hashlib.sha256(salt + password.encode('utf-8')).digest()
     return salt + pwd_hash  # Concatena sale e hash
-
 
 @user_manager_bp.route('/login', methods=['GET', 'POST'])
 def login_page():
@@ -88,13 +81,11 @@ def login_page():
 
     return  render_template("Login_Page_Template.html") # if not post method
 
-
 @user_manager_bp.route('/logout')
 def logout():
 
     logout_user()
     return redirect(url_for('root.root'))
-
 
 @user_manager_bp.route('/sign_in', methods=['GET', 'POST'])
 def sign_in():
@@ -141,6 +132,33 @@ def sign_in():
     else:
         return render_template('Create_Account_Page.html')
 
+@user_manager_bp.route('/deleteAccount')
+@login_required
+def deleteAccount():
+    try:
+        with Session(engine) as s:
+            user = s.get(Utente, current_user.id)
+
+            if user:
+                s.delete(user)
+                s.commit()
+
+                # Elimino le immagini
+                folderpath = os.path.join(UPLOAD_FOLDER, str(user.user))
+                #print(folderpath)
+                if os.path.exists(folderpath):
+                    delete_images_dir(folderpath)
+
+                logout_user()
+                return render_template("Removed.html")
+            else:
+                logout_user()
+                return "<h1>utente non trovato</h1>"
+
+    except Exception as e:
+        s.rollback()  # In caso di errore, fa rollback della sessione
+        print(f"Errore durante l'eliminazione dell'account: {e}")  # Per il log
+        return f"Si è verificato un errore durante l'eliminazione dell'account: {str(e)}"
 
 @user_manager_bp.route('/dashboard')
 @login_required
@@ -159,10 +177,6 @@ def dashboard():
 
     return render_template('dashboard.html', user=current_user.id,
                            email=u.contatto_mail,telefono=u.contatto_tel)
-
-
-
-
 
 @user_manager_bp.route('/carrello')
 @login_required
@@ -194,18 +208,8 @@ def carrello():
         )
 
         for c,p in carrelloutente:
-            _prodotti.append(p)
             id_carrello_entries.append(c)
-            folderpath = os.path.join(UPLOAD_FOLDER, str(p.autore), str(p.id_prodotto))
-            if os.path.exists(folderpath) and os.path.isdir(folderpath):
-                files = os.listdir(folderpath)
-                filepath = os.path.join(folderpath, files[0])
-
-                img_src.append(filepath)
-                print(filepath)
-            else:
-                img_src.append(placeholder)
-                print(placeholder)
+            get_images_for_products(_prodotti, p, img_src)
 
     s.commit()
     return render_template("cart.html", products=_prodotti, img_src=img_src, zip=zip, id_carrello_entries=id_carrello_entries)
@@ -345,7 +349,6 @@ def payed():
 
     return render_template("payed.html")
 
-
 @user_manager_bp.route('/Rimosso')
 @login_required
 def remove():
@@ -379,6 +382,43 @@ def remove():
 
     return render_template('Removed.html')
 
+@user_manager_bp.route('/ArticoloRimosso')
+@login_required
+def remove_item():
+    if len(request.args) == 0 or 'id' not in request.args:
+        return "IMPOSSIBILE RIMUOVERE L'ARTICOLO"
+
+    try:
+        actual_id = int(request.args["id"])
+    except ValueError:
+        return "Inserisci un valore numerico valido per l'ID"
+
+    actual_user = current_user.id
+
+    with Session(engine) as s:
+        try:
+            ris = s.query(Prodotti).filter_by(id_prodotto=actual_id).one()
+
+            if ris.autore != actual_user:
+                return "Non hai i permessi necessari per rimuovere questo articolo"
+
+            s.delete(ris)
+            s.commit()
+
+            # Elimino le immagini
+            folderpath = os.path.join(UPLOAD_FOLDER, str(current_user.id),str(actual_id))
+            print(folderpath)
+            if os.path.exists(folderpath):
+                delete_images_dir(folderpath)
+
+        except NoResultFound:
+            return "L'elemento specificato non esiste"
+        except Exception as e:
+            s.rollback()
+            return f"Si è verificato un errore durante la rimozione: {str(e)}"
+
+    return render_template('Removed.html')
+
 @user_manager_bp.route('/My_sales')
 @login_required
 def sales(): #lista degli annunci appartenenti all'utente.
@@ -389,18 +429,7 @@ def sales(): #lista degli annunci appartenenti all'utente.
     _prodotti = []
     img_src = []
     for p in prodotti:
-
-        _prodotti.append(p)
-        folderpath = os.path.join(UPLOAD_FOLDER, str(p.autore), str(p.id_prodotto))
-        if os.path.exists(folderpath) and os.path.isdir(folderpath):
-            files = os.listdir(folderpath)
-            filepath = os.path.join(folderpath, files[0])
-
-            img_src.append(filepath)
-            print(filepath)
-        else:
-            img_src.append(placeholder)
-            print(placeholder)
+        get_images_for_products(_prodotti, p, img_src)
 
     s.commit()
 
@@ -411,7 +440,7 @@ def sales(): #lista degli annunci appartenenti all'utente.
 def cambiamail():
     usr = current_user.id
     with Session(engine) as s:
-        vecchia_mail = s.query(Utenti.contatto_mail).filter(Utenti.user == usr).one()[0]
+        vecchia_mail = s.query(Utente.contatto_mail).filter(Utente.user == usr).one()[0]
         s.close()
     if request.method == "POST":
         mail1 = request.form['mail1']
@@ -422,8 +451,8 @@ def cambiamail():
             return render_template('Change_mail.html', vecchia_mail=vecchia_mail)
         with Session(engine) as s:
             stmt = (
-                update(Utenti)
-                .where(Utenti.user == usr)
+                update(Utente)
+                .where(Utente.user == usr)
                 .values(contatto_mail = mail1)
             )
             s.execute(stmt)
@@ -438,7 +467,7 @@ def cambiamail():
 def cambiatel():
     usr = current_user.id
     with Session(engine) as s:
-        vecchio_numero = s.query(Utenti.contatto_tel).filter(Utenti.user == usr).one()[0]
+        vecchio_numero = s.query(Utente.contatto_tel).filter(Utente.user == usr).one()[0]
 
     if request.method == "POST":
         tel1 = request.form['tel1']
@@ -449,8 +478,8 @@ def cambiatel():
             return render_template('Change_tel.html', vecchio_numero=vecchio_numero)
         with Session(engine) as s:
             stmt = (
-                update(Utenti)
-                .where(Utenti.user == usr)
+                update(Utente)
+                .where(Utente.user == usr)
                 .values(contatto_tel = tel1)
             )
             s.execute(stmt)
@@ -459,7 +488,6 @@ def cambiatel():
 
     else:
         return render_template('Change_phone.html', vecchio_numero=vecchio_numero)
-
 
 @user_manager_bp.route('/storico',methods=['GET'])
 @login_required
@@ -470,3 +498,4 @@ def storico():
         ris = s.query(st, ps).join(ps, st.id_storico_entry == ps.id_storico_entry).filter(st.user == current_user.id).all()
 
     return render_template('storico.html', ris=ris)
+

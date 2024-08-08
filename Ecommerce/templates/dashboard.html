@@ -23,6 +23,8 @@
         }
     </style>
 </head>
+
+
 <body>
     {% include 'header.html' %}
 <div class="container">
@@ -42,6 +44,12 @@
         > <a class="data-item" href="/carrello">Vai al carrello</a>
     </div>
     <div class="data-item">
+        <div class="data-item"><strong>Storico Acquisti</strong></div>
+        > <a class="data-item" href="/storico">Vai allo Storico Acquisti</a>
+    </div>
+
+
+    <div class="data-item">
         <div class="data-item"><strong>I miei annunci</strong></div>
         > <a class="data-item" href="/My_sales">Vai agli annunci</a>
     </div>
@@ -51,9 +59,28 @@
         > <a class="data-item" href={{ url_for('product.product_upload') }}>Inserisci annuncio</a>
     </div>
 
+    <div class="data-item">
+
+        <div class="data-item"><strong>Elimina account!!</strong></div>
+        <button id="delete">Clicca qui</button>
+        </div>
+
+<script>
+    document.getElementById("delete").addEventListener("click",function () {
+        var conferma = confirm("Sei sicuro di voler procedere?");
+        if (conferma) {
+            window.location.href = "/deleteAccount";
+
+            // Inserisci qui il codice per procedere con l'azione confermata
+        } else {
+            alert("Hai annullato l'azione.");
+            // Inserisci qui il codice per gestire l'azione annullata
+        }
+    });
+</script>
 
 </div>
-    {% include 'footer.html' %}
+
 </body>
 </html>
 

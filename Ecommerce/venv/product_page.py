@@ -1,10 +1,5 @@
-import os
-from datetime import datetime
-import statistics
-from flask import Blueprint, render_template, flash, redirect, request, url_for
-from numpy import double
+from flask import Blueprint, render_template,redirect, request, url_for
 from werkzeug.utils import secure_filename
-
 from sqlclass import engine, func, Recensioni, ProdottiRecensioni
 from sqlalchemy.orm import Session
 from sqlclass import Prodotti
@@ -16,6 +11,13 @@ product_page_bp = Blueprint('product', __name__)
 
 @product_page_bp.route('/<int:product_id>')
 def product_page(product_id):
+
+    """
+    solo se l'utente è loggato , viene fuori se stesso sulla
+    barra di ricerca
+    """
+
+
     with Session(engine) as s:
         p = s.get(Prodotti, product_id)
         print("riga 22 product page: ", p)
@@ -34,9 +36,6 @@ def product_page(product_id):
     else:
         f = [placeholder]
         return render_template('Product_Page_Template.html', product=p,img=f)
-
-
-
 
 @product_page_bp.route('/upload', methods=['GET', 'POST'])
 @login_required
@@ -67,22 +66,6 @@ def product_upload():
         except:
             return "prezzo non valido"
 
-
-
-        images = request.files.getlist('images[]')
-        image_paths = []
-
-        for image in images:
-            if image and allowed_file(image.filename):
-                filename = secure_filename(image.filename)
-
-                filepath = os.path.join(UPLOAD_FOLDER, str(current_user.id), str(last_id + 1))
-
-                os.makedirs(filepath, exist_ok=True)
-                filepath = os.path.join(str(filepath), str(filename))
-                image.save(filepath)
-                image_paths.append(filepath)
-
         with Session(engine) as s:
 
             new_prod = Prodotti(Titolo=title,
@@ -103,12 +86,26 @@ def product_upload():
             s.commit()
             id  = new_prod.id_prodotto
 
+        images = request.files.getlist('images[]')
+        image_paths = []
+
+        for image in images:
+            if image and allowed_file(image.filename):
+                filename = secure_filename(image.filename)
+
+                filepath = os.path.join(UPLOAD_FOLDER, str(current_user.id), str(id))
+
+                os.makedirs(filepath, exist_ok=True)
+                filepath = os.path.join(str(filepath), str(filename))
+                image.save(filepath)
+                image_paths.append(filepath)
 
         return redirect(url_for('product.product_page', product_id=id))
     else:
         return render_template('Upload_Form_Template.html')
 
 @product_page_bp.route("/write_review/<int:id>", methods=['GET', 'POST'])
+@login_required
 def review_upload(id):
     if request.method == 'POST':
         title = request.form['Titolo']

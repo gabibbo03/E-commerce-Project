@@ -1,18 +1,23 @@
-# manca carrello e storico.
-Dal carrello c'è bottone "buy now", il prodotto va in storico e va tolto dal carrello.
- la disponibilità deve essere
-decrementata. (ipotetico trigger)
+#rincontrollo finale per cascade , tutte tabelle con FK.
 
-# recensioni
-da mettere on delete cascade
-in generale tutte lol
+#disiscrizione utente: pulsantino disiscriviti, la page html di landing è la solita "complimenti"
+ quando elimini un utente, elimini gli annunci ma non le recensioni.
 
-# triggers
-  - quantita da aggiungere al carrelle
-  - tabelle per join di transito , vogliamo aggiungere sottobanco le cose
-    e non da python.
-  - quantita da controllare al momento del pagamento
-    (Race Condition).
 
-# fare quella roba del cascade anche su tutte le altre tabelle!!!
-importante.
+ - lo storico non si tocca (fatto apposta per gestire prodotti inesistenti)
+ - se tolgo il utente, tolgo tutti i suoi prodotti.  Fatto con cascade , unica passata
+ - il carrello dell'utente va a zero Fatto con cascade
+
+ - non esistono più le recensioni di quel prodotto . id:  controlli quali non in ProdottiRecensioni (trigger)
+ - stessa roba va fatta coi carrelli: eliminando carrelloutenti non viene elimianto carrello
+ FATTI ENTRAMBIU CONN TRIGGER
+
+ # se il prodotto è nel carrello di un altro ?????????? bisogna aggiungere controllo che id_prodotto del prodotto nel carrello esista nel database
+ - ricordarsi di eliminare la cartella delle immagini relative all'utente
+fattob tutto
+
+ # manca eliminazione prodotti  Fatto.
+
+
+ora tocca a documentazione e refactoring (nomi coerenti, funzioni su files separati, dipendenze non usate etc)
+Video, rimozione tabelle non usate,
